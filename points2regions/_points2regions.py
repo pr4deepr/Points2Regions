@@ -10,7 +10,7 @@ from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.ndimage import distance_transform_edt as edt, binary_erosion
 
 from .geojson import labelmask2geojson
-from .utils import inverse_distance_interpolation, attribute_matrix
+from .utils import inverse_distance_interpolation, attribute_matrix, ensure_int32_indices
 
 
 def _compute_cluster_center(cluster_labels, features):
@@ -346,7 +346,8 @@ class Points2Regions:
         self.X_train = sp.vstack([
             result['features'][result['passed_threshold']] for result in self._results.values()
         ])
-
+        # ensure int32 indices
+        self.X_train = ensure_int32_indices(self.X_train)
         default_kmeans_kwargs = dict(
             init="k-means++",
             max_iter=100,
