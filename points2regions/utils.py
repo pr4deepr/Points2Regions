@@ -306,3 +306,13 @@ def inverse_distance_interpolation(
         pix2marker_ind=B.T.nonzero()[1]
     )
 
+def ensure_int32_indices(X):
+	"""
+	convert the sparse matrix indices to int32
+	"""
+    if not sp.issparse(X):
+        raise ValueError("Expected a sparse matrix")
+    X_copy = X.copy()
+    X_copy.indices = X_copy.indices.astype(np.int32)
+    X_copy.indptr = X_copy.indptr.astype(np.int32)
+    return X_copy
