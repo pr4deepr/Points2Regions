@@ -307,11 +307,13 @@ def inverse_distance_interpolation(
     )
 
 def ensure_int32_indices(X):
-	"""
-	convert the sparse matrix indices to int32
-	"""
+    """
+    convert the sparse matrix indices to int32
+    """
     if not sp.issparse(X):
         raise ValueError("Expected a sparse matrix")
+    if X.nnz > np.iinfo(np.int32).max:
+        raise OverflowError(f"Matrix is too large for int32 indices (nnz={X.nnz}) > {np.iinfo(np.int32).max}")
     X_copy = X.copy()
     X_copy.indices = X_copy.indices.astype(np.int32)
     X_copy.indptr = X_copy.indptr.astype(np.int32)
