@@ -313,7 +313,9 @@ def ensure_int32_indices(X):
     if not sp.issparse(X):
         raise ValueError("Expected a sparse matrix")
     if X.nnz > np.iinfo(np.int32).max:
-        raise OverflowError(f"Matrix is too large for int32 indices (nnz={X.nnz}) > {np.iinfo(np.int32).max}")
+        #get type of indices
+        dtype = X.indices.dtype
+        raise OverflowError(f"Matrix is too large for int32 indices. Got {dtype}. Run with dask_kmeans=True")
     X_copy = X.copy()
     X_copy.indices = X_copy.indices.astype(np.int32)
     X_copy.indptr = X_copy.indptr.astype(np.int32)
